@@ -1,0 +1,48 @@
+{
+  "rifle_body": {
+    "name": "Rifle Body",
+    "aliases": [
+      "rifle",
+      "rb"
+    ],
+    "category": "component",
+    "recycle": {
+      "scrap": 25,
+      "high_quality_metal": 2,
+      "metal_fragments": 75
+    }
+  },
+  "tech_trash": {
+    "name": "Tech Trash",
+    "aliases": [
+      "tech"
+    ],
+    "category": "component",
+    "recycle": {
+      "scrap": 20,
+      "high_quality_metal": 1
+    }
+  },
+  "smg_body": {
+    "name": "SMG Body",
+    "aliases": [
+      "smg"
+    ],
+    "category": "component",
+    "recycle": {
+      "scrap": 15,
+      "high_quality_metal": 2
+    }
+  },
+  "road_sign": {
+    "name": "Road Sign",
+    "aliases": [
+      "sign"
+    ],
+    "category": "component",
+    "recycle": {
+      "scrap": 5,
+      "metal_fragments": 50
+    }
+  }
+}
