@@ -3,11 +3,16 @@ from config import API_HOST
 
 
 def get_item(query):
-    return requests.get(f"{API_HOST}/item/{query}").json()
+    response = requests.get(f"{API_HOST}/item/{query}", timeout=5)
+    response.raise_for_status()
+    return response.json()
 
 
 def reverse(resource, amount):
-    return requests.get(
+    response = requests.get(
         f"{API_HOST}/reverse",
-        params={"resource": resource, "amount": amount}
-    ).json()
+        params={"resource": resource, "amount": amount},
+        timeout=5,
+    )
+    response.raise_for_status()
+    return response.json()

@@ -21,6 +21,19 @@ async def on_ready():
     print("Bot ready")
 
 
+@client.tree.error
+async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
+    message = "Command failed."
+
+    if isinstance(error, app_commands.CommandInvokeError) and error.original:
+        message = f"Command failed: {error.original}"
+
+    if interaction.response.is_done():
+        await interaction.followup.send(message, ephemeral=True)
+    else:
+        await interaction.response.send_message(message, ephemeral=True)
+
+
 if not DISCORD_TOKEN:
     raise RuntimeError("DISCORD_TOKEN is not set")
 

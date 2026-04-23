@@ -15,7 +15,8 @@ def run_api():
 
 def run_bot():
     return subprocess.Popen(
-        [sys.executable, "-m", "bot.bot"]
+        [sys.executable, "-m", "bot.bot"],
+        cwd=BASE_DIR,
     )
 
 

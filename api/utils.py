@@ -1,44 +1,59 @@
 import json
+import re
+from pathlib import Path
 
-with open("data.json", encoding="utf-8") as f:
-    DATA = json.load(f)
+
+DATA_PATH = Path(__file__).resolve().parent.parent / "data.json"
+DATA = json.loads(DATA_PATH.read_text(encoding="utf-8"))
 
 
-def normalize(text: str):
-    return text.lower().replace(" ", "_")
+def normalize(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
 
 
 def find_item(query: str):
-    query = query.lower()
-
+    normalized_query = normalize(query)
     best = None
 
     for key, item in DATA.items():
+        candidates = [
+            key,
+            item.get("name", ""),
+            item.get("slug", ""),
+            item.get("shortname", ""),
+            *item.get("aliases", []),
+        ]
 
-        if query == key:
+        normalized_candidates = [normalize(candidate) for candidate in candidates if candidate]
+
+        if normalized_query in normalized_candidates:
             return item
 
-        if query in item["name"].lower():
+        if any(normalized_query in candidate for candidate in normalized_candidates):
             best = item
-
-        if query in item.get("aliases", []):
-            return item
 
     return best
 
 
 def reverse_calculate(resource: str, amount: int):
+    resource_key = normalize(resource)
     results = []
 
     for item in DATA.values():
-        if resource in item["recycle"]:
-            value = item["recycle"][resource]
-            needed = -(-amount // value)
+        recycle = item.get("recycle", {})
 
-            results.append({
+        if resource_key not in recycle:
+            continue
+
+        value = recycle[resource_key]
+        needed = -(-amount // value)
+
+        results.append(
+            {
                 "item": item["name"],
                 "needed": needed,
-                "value": value
-            })
+                "value": value,
+            }
+        )
 
-    return sorted(results, key=lambda x: x["needed"])
+    return sorted(results, key=lambda row: (row["needed"], row["item"]))
